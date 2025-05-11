@@ -1,36 +1,52 @@
-# TesteUnitario
+# 🧩 Projeto Spring Boot - CRUD de Usuários e Endereços
 
-# Projeto Spring Boot - Gerenciamento de Usuários
-
-Este projeto é uma aplicação simples construída com **Spring Boot**, utilizando **JPA/Hibernate** para persistência e **MariaDB** como banco de dados relacional. A aplicação faz parte de uma atividade prática e tem como objetivo implementar operações básicas de CRUD para a entidade `User`.
+Este é um projeto desenvolvido como parte de uma avaliação prática da disciplina de **Desenvolvimento Web com Spring Boot**. A aplicação implementa um sistema completo de gerenciamento de **Usuários** e seus respectivos **Endereços**, utilizando a arquitetura REST, com persistência de dados em **MariaDB**.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 📚 Objetivos da Atividade
+
+- Desenvolver uma aplicação Spring Boot com duas entidades diferentes relacionadas entre si.
+- Implementar um CRUD completo para ambas as entidades.
+- Utilizar Spring Data JPA para persistência de dados.
+- Documentar a API com Swagger.
+- Utilizar boas práticas de organização em pacotes (MVC).
+- Realizar testes locais com banco MariaDB.
+
+---
+
+## 🛠️ Tecnologias e Ferramentas
 
 - Java 17+
 - Spring Boot 3.4.5
+- Spring Web
 - Spring Data JPA
-- Hibernate
-- MariaDB 10.4+
+- MariaDB
 - Maven
-- HikariCP (Gerenciador de Conexões)
+- Lombok
+- Swagger/OpenAPI
+- Docker & Docker Compose (opcional)
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🗃️ Estrutura do Projeto
 
 src/
 └── main/
 ├── java/
 │ └── com.user.users/
 │ ├── UsersApplication.java
-│ └── model/
-│ └── repository/
+│ ├── model/
+│ │ ├── User.java
+│ │ └── Endereco.java
+│ ├── repository/
+│ │ ├── UserRepository.java
+│ │ └── EnderecoRepository.java
 │ └── controller/
+│ ├── UserController.java
+│ └── EnderecoController.java
 └── resources/
-├── application.properties
-└── schema.sql (opcional)
+└── application.properties
 
 yaml
 Copiar
@@ -38,64 +54,131 @@ Editar
 
 ---
 
-## ⚙️ Configuração
+## 🔄 Relacionamento das Entidades
 
-### Banco de Dados
+- Um **usuário** pode ter **um ou mais endereços**.
+- Relacionamento do tipo **@OneToMany** entre `User` e `Endereco`.
 
-Antes de rodar a aplicação, **crie o banco de dados no MariaDB com o nome correto**. Exemplo:
+---
 
-```sql
-CREATE DATABASE user;
-⚠️ O erro abaixo ocorre se o banco de dados user não existir:
+## 📦 Funcionalidades Implementadas
 
-pgsql
-Copiar
-Editar
-SQL Error: 1049, SQLState: 42000
-Unknown database 'user'
-application.properties
-properties
-Copiar
-Editar
-spring.datasource.url=jdbc:mariadb://localhost:3306/user
+### Usuários
+- `GET /users` – Listar todos os usuários
+- `GET /users/{id}` – Buscar um usuário por ID
+- `POST /users` – Criar um novo usuário
+- `PUT /users/{id}` – Atualizar um usuário
+- `DELETE /users/{id}` – Remover um usuário
+
+### Endereços
+- `GET /enderecos` – Listar todos os endereços
+- `GET /enderecos/{id}` – Buscar um endereço por ID
+- `POST /enderecos` – Criar novo endereço (vinculado a um usuário)
+- `PUT /enderecos/{id}` – Atualizar um endereço
+- `DELETE /enderecos/{id}` – Remover um endereço
+
+---
+
+## ⚙️ Configuração do Banco de Dados
+
+### `application.properties`
+
+```properties
+spring.datasource.url=jdbc:mariadb://localhost:3306/userdb
 spring.datasource.username=root
-spring.datasource.password=senha
+spring.datasource.password=root
 spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect
-▶️ Executando a Aplicação
-No terminal ou IDE (VS Code, IntelliJ, etc.):
+
+# Swagger
+springdoc.api-docs.path=/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+Docker (opcional)
+yaml
+Copiar
+Editar
+# docker-compose.yml
+version: '3.8'
+services:
+  mariadb:
+    image: mariadb:10.6
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
+Suba com:
 
 bash
 Copiar
 Editar
-./mvnw spring-boot:run
-Ou compile e execute:
+docker-compose up -d
+▶️ Como Executar
+Certifique-se de que o banco MariaDB está rodando.
+
+Compile o projeto com Maven:
 
 bash
 Copiar
 Editar
-./mvnw clean package
+mvn clean package
+Execute a aplicação:
+
+bash
+Copiar
+Editar
 java -jar target/users-0.0.1-SNAPSHOT.jar
-❗ Possíveis Erros
-❌ Unknown database 'user'
-Esse erro indica que o banco de dados especificado não foi encontrado. Solução:
+📘 Acessando o Swagger
+Após rodar a aplicação, acesse no navegador:
 
-Verifique se o banco existe com SHOW DATABASES;
+Swagger UI: http://localhost:8080/swagger-ui.html
 
-Crie-o se necessário: CREATE DATABASE user;
+API Docs: http://localhost:8080/api-docs
 
+🔍 Exemplo de Requisição JSON
+POST /users
+json
+Copiar
+Editar
+{
+  "nome": "Maria Oliveira",
+  "email": "maria@example.com"
+}
+POST /enderecos
+json
+Copiar
+Editar
+{
+  "rua": "Rua das Palmeiras",
+  "numero": "123",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "userId": 1
+}
 🧪 Testes
-Os testes ainda não foram implementados, mas poderão ser adicionados com:
+A aplicação pode ser facilmente estendida com testes utilizando:
 
-JUnit
+JUnit 5
 
-Spring Boot Test
+Mockito
 
-👨‍💻 Autor
-Desenvolvido como parte de uma avaliação prática da disciplina de Desenvolvimento Web com Spring Boot.
+Testcontainers (para testes com banco em container Docker)
+
+✅ Conclusão
+Esta aplicação atendeu aos requisitos propostos da avaliação, implementando um CRUD completo com duas entidades, seguindo boas práticas de organização, persistência, e documentação da API.
+
+👤 Autor
+Desenvolvido por [Seu Nome Aqui]
+Atividade prática de Desenvolvimento Web com Spring Boot
 
 📄 Licença
-Este projeto é apenas para fins educacionais.
+Projeto de uso educacional e acadêmico.
