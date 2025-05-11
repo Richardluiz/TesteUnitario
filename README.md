@@ -46,7 +46,7 @@ Todos os testes passaram corretamente ✅
 
 Eventuais falhas durante a execução foram identificadas, corrigidas e revalidadas.
 
-📝 Relatório de Alterações
+📝 ##Relatório de Alterações
 Adição de classes de teste no pacote src/test/java.
 
 Uso de anotações como @Mock, @InjectMocks, @BeforeEach para setup dos testes.
@@ -55,7 +55,7 @@ Criação de cenários com retorno simulado (when(...).thenReturn(...)).
 
 Correções pontuais em métodos do controlador, detectadas durante os testes.
 
-📌 Exemplo de Teste com Mockito
+📌 ##Exemplo de Teste com Mockito
 java
 Copiar
 Editar
@@ -79,12 +79,12 @@ public class UserControllerTest {
         assertEquals("Maria", response.getBody().getNome());
     }
 }
-📄 Conclusão
+##📄 Conclusão
 Esta prática foi essencial para consolidar o uso de testes unitários e mocking em aplicações Spring Boot, garantindo qualidade e confiabilidade no código. A abordagem testada permite fácil manutenção e evolução da aplicação ao longo do tempo.
 
-👤 Autor
-Desenvolvido por [Seu Nome Aqui]
+##👤 Autor
+Desenvolvido por [Richard Luiz]
 Atividade prática de Desenvolvimento Web com Spring Boot
 
-📚 Licença
+##📚 Licença
 Este projeto tem finalidade educacional e acadêmica.
