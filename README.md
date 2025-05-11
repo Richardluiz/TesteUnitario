@@ -93,14 +93,30 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect
 
+
+
+
+
+
+
+
+
+### 🚀 Swagger
+
+Para documentar e testar a API de forma interativa, utilizamos o **Swagger** através da biblioteca `springdoc-openapi`.
+
+Adicione as seguintes configurações no `application.properties`:
+
+```properties
 # Swagger
 springdoc.api-docs.path=/api-docs
 springdoc.swagger-ui.path=/swagger-ui.html
-Docker (opcional)
+🐳 Docker (opcional)
+Se desejar subir o banco de dados MariaDB via Docker, crie o arquivo docker-compose.yml com o seguinte conteúdo:
+
 yaml
 Copiar
 Editar
-# docker-compose.yml
 version: '3.8'
 services:
   mariadb:
@@ -116,14 +132,13 @@ services:
 
 volumes:
   mariadb_data:
-Suba com:
-
+🔼 Suba o container com:
 bash
 Copiar
 Editar
 docker-compose up -d
 ▶️ Como Executar
-Certifique-se de que o banco MariaDB está rodando.
+Certifique-se de que o banco MariaDB está rodando localmente ou via Docker.
 
 Compile o projeto com Maven:
 
@@ -138,13 +153,13 @@ Copiar
 Editar
 java -jar target/users-0.0.1-SNAPSHOT.jar
 📘 Acessando o Swagger
-Após rodar a aplicação, acesse no navegador:
+Após a aplicação estar rodando, acesse a documentação interativa da API via navegador:
 
 Swagger UI: http://localhost:8080/swagger-ui.html
 
 API Docs: http://localhost:8080/api-docs
 
-🔍 Exemplo de Requisição JSON
+🔍 Exemplo de Requisições JSON
 POST /users
 json
 Copiar
@@ -174,11 +189,15 @@ Mockito
 Testcontainers (para testes com banco em container Docker)
 
 ✅ Conclusão
-Esta aplicação atendeu aos requisitos propostos da avaliação, implementando um CRUD completo com duas entidades, seguindo boas práticas de organização, persistência, e documentação da API.
+Esta aplicação atendeu aos requisitos propostos da avaliação, implementando um CRUD completo com duas entidades relacionadas, seguindo boas práticas de organização de código, persistência em banco de dados relacional, e documentação da API REST com Swagger.
 
 👤 Autor
 Desenvolvido por [Seu Nome Aqui]
-Atividade prática de Desenvolvimento Web com Spring Boot
+Atividade prática da disciplina: Desenvolvimento Web com Spring Boot
 
 📄 Licença
 Projeto de uso educacional e acadêmico.
+
+yaml
+Copiar
+Editar
