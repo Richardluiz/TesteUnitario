@@ -1,203 +1,90 @@
-# 🧩 Projeto Spring Boot - CRUD de Usuários e Endereços
+# 🧪 Prática: Testes Unitários e Mocking em Spring Boot
 
-Este é um projeto desenvolvido como parte de uma avaliação prática da disciplina de **Desenvolvimento Web com Spring Boot**. A aplicação implementa um sistema completo de gerenciamento de **Usuários** e seus respectivos **Endereços**, utilizando a arquitetura REST, com persistência de dados em **MariaDB**.
+## 🎯 Objetivo
 
----
-
-## 📚 Objetivos da Atividade
-
-- Desenvolver uma aplicação Spring Boot com duas entidades diferentes relacionadas entre si.
-- Implementar um CRUD completo para ambas as entidades.
-- Utilizar Spring Data JPA para persistência de dados.
-- Documentar a API com Swagger.
-- Utilizar boas práticas de organização em pacotes (MVC).
-- Realizar testes locais com banco MariaDB.
+O objetivo desta atividade prática foi **implementar e validar testes unitários** para um controlador de usuários em uma aplicação Spring Boot, utilizando os frameworks **JUnit 5** e **Mockito**.
 
 ---
 
-## 🛠️ Tecnologias e Ferramentas
+## ⚙️ Tecnologias Utilizadas
 
-- Java 17+
-- Spring Boot 3.4.5
-- Spring Web
-- Spring Data JPA
-- MariaDB
-- Maven
-- Lombok
-- Swagger/OpenAPI
-- Docker & Docker Compose (opcional)
-
----
-
-## 🗃️ Estrutura do Projeto
-
-src/
-└── main/
-├── java/
-│ └── com.user.users/
-│ ├── UsersApplication.java
-│ ├── model/
-│ │ ├── User.java
-│ │ └── Endereco.java
-│ ├── repository/
-│ │ ├── UserRepository.java
-│ │ └── EnderecoRepository.java
-│ └── controller/
-│ ├── UserController.java
-│ └── EnderecoController.java
-└── resources/
-└── application.properties
-
-yaml
-Copiar
-Editar
+- Java 11 ou superior  
+- Spring Boot  
+- Spring Web  
+- Spring Data JPA  
+- Spring DevTools  
+- MariaDB  
+- JUnit 5  
+- Mockito  
 
 ---
 
-## 🔄 Relacionamento das Entidades
+## ✅ Passos da Atividade
 
-- Um **usuário** pode ter **um ou mais endereços**.
-- Relacionamento do tipo **@OneToMany** entre `User` e `Endereco`.
+### 1. Configuração do Ambiente
 
----
+- Projeto previamente configurado com:
+  - `Spring Boot`, `Spring Web`, `Spring Data JPA`
+  - Banco de dados **MariaDB** conectado corretamente
+- Dependências para testes incluídas no `pom.xml`:
+  - **JUnit 5**
+  - **Mockito**
 
-## 📦 Funcionalidades Implementadas
+### 2. Implementação dos Testes
 
-### Usuários
-- `GET /users` – Listar todos os usuários
-- `GET /users/{id}` – Buscar um usuário por ID
-- `POST /users` – Criar um novo usuário
-- `PUT /users/{id}` – Atualizar um usuário
-- `DELETE /users/{id}` – Remover um usuário
+- Foram criados testes unitários para o **controlador de usuários**.
+- As dependências externas foram simuladas com o uso de **Mockito**, permitindo a validação isolada da lógica de negócio.
+- Métodos testados incluíram: criação, busca, atualização e exclusão de usuários.
 
-### Endereços
-- `GET /enderecos` – Listar todos os endereços
-- `GET /enderecos/{id}` – Buscar um endereço por ID
-- `POST /enderecos` – Criar novo endereço (vinculado a um usuário)
-- `PUT /enderecos/{id}` – Atualizar um endereço
-- `DELETE /enderecos/{id}` – Remover um endereço
+### 3. Execução dos Testes
 
----
+- Os testes foram executados com sucesso utilizando a IDE ou via Maven:
+  
+```bash
+./mvnw test
+Todos os testes passaram corretamente ✅
 
-## ⚙️ Configuração do Banco de Dados
+Eventuais falhas durante a execução foram identificadas, corrigidas e revalidadas.
 
-### `application.properties`
+📝 Relatório de Alterações
+Adição de classes de teste no pacote src/test/java.
 
-```properties
-spring.datasource.url=jdbc:mariadb://localhost:3306/userdb
-spring.datasource.username=root
-spring.datasource.password=root
-spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+Uso de anotações como @Mock, @InjectMocks, @BeforeEach para setup dos testes.
 
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect
+Criação de cenários com retorno simulado (when(...).thenReturn(...)).
 
+Correções pontuais em métodos do controlador, detectadas durante os testes.
 
-
-
-
-
-
-
-
-### 🚀 Swagger
-
-Para documentar e testar a API de forma interativa, utilizamos o **Swagger** através da biblioteca `springdoc-openapi`.
-
-Adicione as seguintes configurações no `application.properties`:
-
-```properties
-# Swagger
-springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.path=/swagger-ui.html
-🐳 Docker (opcional)
-Se desejar subir o banco de dados MariaDB via Docker, crie o arquivo docker-compose.yml com o seguinte conteúdo:
-
-yaml
+📌 Exemplo de Teste com Mockito
+java
 Copiar
 Editar
-version: '3.8'
-services:
-  mariadb:
-    image: mariadb:10.6
-    container_name: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: userdb
-    ports:
-      - "3306:3306"
-    volumes:
-      - mariadb_data:/var/lib/mysql
+@ExtendWith(MockitoExtension.class)
+public class UserControllerTest {
 
-volumes:
-  mariadb_data:
-🔼 Suba o container com:
-bash
-Copiar
-Editar
-docker-compose up -d
-▶️ Como Executar
-Certifique-se de que o banco MariaDB está rodando localmente ou via Docker.
+    @Mock
+    private UserRepository userRepository;
 
-Compile o projeto com Maven:
+    @InjectMocks
+    private UserController userController;
 
-bash
-Copiar
-Editar
-mvn clean package
-Execute a aplicação:
+    @Test
+    void testCriarUsuario() {
+        User user = new User("Maria", "maria@example.com");
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
-bash
-Copiar
-Editar
-java -jar target/users-0.0.1-SNAPSHOT.jar
-📘 Acessando o Swagger
-Após a aplicação estar rodando, acesse a documentação interativa da API via navegador:
+        ResponseEntity<User> response = userController.criarUsuario(user);
 
-Swagger UI: http://localhost:8080/swagger-ui.html
-
-API Docs: http://localhost:8080/api-docs
-
-🔍 Exemplo de Requisições JSON
-POST /users
-json
-Copiar
-Editar
-{
-  "nome": "Maria Oliveira",
-  "email": "maria@example.com"
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Maria", response.getBody().getNome());
+    }
 }
-POST /enderecos
-json
-Copiar
-Editar
-{
-  "rua": "Rua das Palmeiras",
-  "numero": "123",
-  "cidade": "São Paulo",
-  "estado": "SP",
-  "userId": 1
-}
-🧪 Testes
-A aplicação pode ser facilmente estendida com testes utilizando:
-
-JUnit 5
-
-Mockito
-
-Testcontainers (para testes com banco em container Docker)
-
-✅ Conclusão
-Esta aplicação atendeu aos requisitos propostos da avaliação, implementando um CRUD completo com duas entidades relacionadas, seguindo boas práticas de organização de código, persistência em banco de dados relacional, e documentação da API REST com Swagger.
+📄 Conclusão
+Esta prática foi essencial para consolidar o uso de testes unitários e mocking em aplicações Spring Boot, garantindo qualidade e confiabilidade no código. A abordagem testada permite fácil manutenção e evolução da aplicação ao longo do tempo.
 
 👤 Autor
 Desenvolvido por [Seu Nome Aqui]
-Atividade prática da disciplina: Desenvolvimento Web com Spring Boot
+Atividade prática de Desenvolvimento Web com Spring Boot
 
-📄 Licença
-Projeto de uso educacional e acadêmico.
-
-yaml
-Copiar
-Editar
+📚 Licença
+Este projeto tem finalidade educacional e acadêmica.
